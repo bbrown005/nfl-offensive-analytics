@@ -53,3 +53,29 @@ discrepancies = drive_counts.filter(
 
 print(discrepancies.head(15))
 print("Drives with different counts:", discrepancies.height)
+
+drive_1 = pbp.filter(
+    (pl.col("game_id") == "2024_01_ARI_BUF")
+    & (pl.col("fixed_drive") == 1)
+)
+
+print(
+    drive_1.select([
+        "play_id",
+        "play_type",
+        "yards_gained",
+        "drive_play_count",
+        "desc",
+    ]).sort("play_id")
+)
+
+play_types = (
+    pbp
+    .group_by("play_type")
+    .agg(
+        pl.len().alias("count")
+    )
+    .sort("count", descending=True)
+)
+
+print(play_types)
